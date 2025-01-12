@@ -28,6 +28,7 @@ const TodosScreen = () => {
     const [loading, setLoading] = useState(true);
     const [dialogVisible, setDialogVisible] = useState(false);
     const [dialogMessage, setDialogMessage] = useState('');
+    const [editingTodo, setEditingTodo] = useState(null);
     const router = useRouter();
 
     useEffect(() => {
@@ -50,7 +51,7 @@ const TodosScreen = () => {
             await axios.post(`${API_URL}/api/todos`, {
                 title,
                 description
-            }, {headers: {Authorization: `Bearer ${token}`}});
+            }, {headers: {Authorization: `Bearer ${token}`}});  
             fetchTodos();
             setTitle('');
             setDescription('');
@@ -64,10 +65,40 @@ const TodosScreen = () => {
     const handleDeleteTodo = async (id: string) => {
         try {
             const token = await AsyncStorage.getItem('token');
-            await axios.delete(`${API_URL}/api/todos/${id}`, {headers: {Authorization: `Bearer ${token}`}});
+            await axios.delete(`${API_URL}/api/todos/${id}`, {headers: {Authorization: `Bearer ${token}`}});  
             fetchTodos();
         } catch (error) {
             setDialogMessage('Failed to delete todo');
+            setDialogVisible(true);
+        }
+    };
+
+    const handleEditTodo = (todo) => {
+        setEditingTodo(todo);
+        setTitle(todo.title);
+        setDescription(todo.description);
+        setIsAdding(true);
+    };
+
+    const handleUpdateTodo = async () => {
+        if (!title || !description) {
+            setDialogMessage('Both title and description are required.');
+            setDialogVisible(true);
+            return;
+        }
+        try {
+            const token = await AsyncStorage.getItem('token');
+            await axios.put(`${API_URL}/api/todos/${editingTodo._id}`, {
+                title,
+                description
+            }, {headers: {Authorization: `Bearer ${token}`}});  
+            fetchTodos();
+            setTitle('');
+            setDescription('');
+            setEditingTodo(null);
+            setIsAdding(false);
+        } catch (error) {
+            setDialogMessage('Failed to update todo');
             setDialogVisible(true);
         }
     };
@@ -83,13 +114,14 @@ const TodosScreen = () => {
                         data={todos}
                         keyExtractor={(item) => item._id}
                         renderItem={({item}) => (
-                            <Card style={styles.card} elevation={3} onPress={() => router.push(`../todo/${item._id}`)}>
+                            <Card style={styles.card} elevation={3}>
                                 <Card.Content>
-                                    <Text variant="titleMedium">{item.title}</Text>
+                                    <Text variant="titleMedium" style={styles.cardTitle}>{item.title}</Text>
                                     <Text variant="bodyMedium" style={styles.description}>{item.description}</Text>
                                 </Card.Content>
                                 <Card.Actions>
-                                    <Button onPress={() => handleDeleteTodo(item._id)}>Delete</Button>
+                                    <Button onPress={() => handleEditTodo(item)} mode="outlined" style={styles.editButton}>Edit</Button>
+                                    <Button onPress={() => handleDeleteTodo(item._id)} mode="outlined" style={styles.deleteButton}>Delete</Button>
                                 </Card.Actions>
                             </Card>
                         )}
@@ -99,12 +131,14 @@ const TodosScreen = () => {
                 {isAdding && (
                     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                                           style={styles.inputContainer}>
-                        <TextInput label="Title" value={title} onChangeText={setTitle} style={styles.input}
-                                   mode="outlined"/>
-                        <TextInput label="Description" value={description} onChangeText={setDescription}
-                                   style={styles.input} mode="outlined" multiline/>
-                        <Button mode="contained" onPress={handleAddTodo} style={styles.addButton}>Add Todo</Button>
-                        <Button onPress={() => setIsAdding(false)} style={styles.cancelButton}>Cancel</Button>
+                        <TextInput label="Title" value={title} onChangeText={setTitle} style={styles.input} mode="outlined"/>
+                        <TextInput label="Description" value={description} onChangeText={setDescription} style={styles.input} mode="outlined" multiline/>
+                        {editingTodo ? (
+                            <Button mode="contained" onPress={handleUpdateTodo} style={styles.addButton}>Update Todo</Button>
+                        ) : (
+                            <Button mode="contained" onPress={handleAddTodo} style={styles.addButton}>Add Todo</Button>
+                        )}
+                        <Button onPress={() => {setIsAdding(false); setEditingTodo(null)}} style={styles.cancelButton}>Cancel</Button>
                     </KeyboardAvoidingView>
                 )}
                 {!isAdding && (
@@ -128,12 +162,15 @@ const TodosScreen = () => {
 
 const styles = StyleSheet.create({
     container: {
+        textAlign: 'center',
         flex: 1,
         paddingTop: Constants.statusBarHeight,
+        backgroundColor: '#fff',
     },
     title: {
         marginTop: 16,
         marginHorizontal: 16,
+        color: '#0352fc',
     },
     listContainer: {
         padding: 16,
@@ -141,30 +178,50 @@ const styles = StyleSheet.create({
     card: {
         marginBottom: 16,
         borderRadius: 8,
+        backgroundColor: '#f9f9f9',
+    },
+    cardTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#0352fc',
     },
     description: {
         marginTop: 8,
         color: 'gray',
     },
+    editButton: {
+        backgroundColor: '#0352fc',
+        color: 'white',
+    },
+    deleteButton: {
+        backgroundColor: 'red',
+        color: 'white',
+    },
     fab: {
         position: 'absolute',
         right: 16,
         bottom: 16,
+        backgroundColor: '#0352fc',
     },
     inputContainer: {
         padding: 16,
         borderTopLeftRadius: 16,
         borderTopRightRadius: 16,
         elevation: 5,
+        backgroundColor: '#fff',
     },
     input: {
         marginBottom: 12,
+        backgroundColor: '#fff',
+        color: 'black',
     },
     addButton: {
         marginTop: 12,
+        backgroundColor: '#0352fc',
     },
     cancelButton: {
         marginTop: 8,
+        backgroundColor: 'red',
     },
     loading: {
         flex: 1,
