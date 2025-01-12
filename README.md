@@ -27,7 +27,11 @@ You can start developing by editing the files inside the **app** directory. This
 
 ## Get a fresh project
 
-When you're ready, run:
+When you're ready, run:![ProfileScreen](https://github.com/user-attachments/assets/d374211b-2307-4206-af97-ba62a3a9369a)
+![addtodo](https://github.com/user-attachments/assets/ae8dda48-9c62-4359-8abd-26b835e93324)
+![login](https://github.com/user-attachments/assets/7f6d9025-5d59-481d-a072-186ec7246f80)
+![todosScreen](https://github.com/user-attachments/assets/a7a12e27-cb45-4621-8f81-cef975aeaaca)
+
 
 ```bash
 npm run reset-project
@@ -48,3 +52,6 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+
+
