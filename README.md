@@ -37,7 +37,8 @@ When you're ready, run:![ProfileScreen](https://github.com/user-attachments/asse
 npm run reset-project
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+This command will move the starter code to the **app-example** ![edittodo](https://github.com/user-attachments/assets/300034e9-2622-4e4a-81a3-9f1c32b13838)
+directory and create a blank **app** directory where you can start developing.
 
 ## Learn more
 
