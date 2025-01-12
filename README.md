@@ -19,7 +19,8 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 In the output, you'll find options to open the app in a
 
 - [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)![edittodo](https://github.com/user-attachments/assets/ac120bf2-b060-4a3d-9de4-50b9c4f42f41)
+
 - [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
 - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
